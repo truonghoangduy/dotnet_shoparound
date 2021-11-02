@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    // View could override their choseein layout
+}
+@using ApplicationCore.Entities;
+
+<!-- Content -->
+<div id="content">
+    <!-- Content Slider -->
+    <div id="slider" class="box">
+        <div id="slider-holder">
+            @* TOP SELLING PRODUCT *@
+            <ul>
+
+                <li><a href="#"><img src="~/images/slide1.jpg" alt="" /></a></li>
+                <li><a href="#"><img src="~/images/slide1.jpg" alt="" /></a></li>
+                <li><a href="#"><img src="~/images/slide1.jpg" alt="" /></a></li>
+                <li><a href="#"><img src="~/images/slide1.jpg" alt="" /></a></li>
+            </ul>
+        </div>
+        <div id="slider-nav"> <a href="#" class="active">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a>
+        </div>
+    </div>
+    <!-- End Content Slider -->
+    <!-- Products -->
+    <div class="products">
+        <div class="cl">&nbsp;</div>
+        <ul>
+            @* PRODUCT BLOCK *@
+            @foreach (var item in (ViewBag.Products as List<Product>).Select((value, i) => (value, i)))
+            {
+                bool isLast = (item.i % 3 == 0);
+                var lastProductStyle = isLast ? "last" : "";
+                <li class="@lastProductStyle">
+                    <a href="#"><img src="@item.value.ImageURL" alt="" /></a>
+                    <div class="product-info">
+                        <h3>@item.value.Name</h3>
+                        <div class="product-desc">
+                            <h4>@item.value.Catergory.Name</h4>
+                            <p>
+                                @item.value.Description.Substring(0,20)
+                                @* Lorem ipsum dolor sit<br />
+                                    amet *@
+                            </p>
+                            <strong class="price">$@item.value.Price</strong>
+                        </div>
+                    </div>
+                </li>
+            }
+
+            <li>
+                <a href="#"><img src="~/images/big1.jpg" alt="" /></a>
+                <div class="product-info">
+                    <h3>LOREM IPSUM</h3>
+                    <div class="product-desc">
+                        <h4>WOMEN’S</h4>
+                        <p>
+                            Lorem ipsum dolor sit<br />
+                            amet
+                        </p>
+                        <strong class="price">$58.99</strong>
+                    </div>
+                </div>
+            </li>
+
+            <li class="last">
+                <a href="#"><img src="~/images/big1.jpg" alt="" /></a>
+                <div class="product-info">
+                    <h3>LOREM IPSUM</h3>
+                    <div class="product-desc">
+                        <h4>WOMEN’S</h4>
+                        <p>
+                            Lorem ipsum dolor sit<br />
+                            amet
+                        </p>
+                        <strong class="price">$58.99</strong>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="cl">&nbsp;</div>
+    </div>
+    <!-- End Products -->
+</div>
+<!-- End Content -->
