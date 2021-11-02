@@ -127,7 +127,7 @@ namespace Infrastructure.Data
                 var imgPath = mockValidImgPaths[f.Random.Number(mockValidImgPaths.Count - 1)];
                 var product = new Product
                 {
-                    ID = productID,
+                    // ID = productID,
                     Name = f.Commerce.ProductName(),
                     Description = f.Commerce.ProductDescription(),
                     ImageURL = imgPath,
@@ -147,7 +147,7 @@ namespace Infrastructure.Data
             var catId = 1;
             foreach (var item in f.Commerce.Categories(numberOfCategory))
             {
-                var cat = new Catergory { Name = item, ID = catId, Description = f.Commerce.ProductAdjective() };
+                var cat = new Catergory { Name = item, Description = f.Commerce.ProductAdjective() };
                 Catergories.Add(cat);
                 catId++;
             }

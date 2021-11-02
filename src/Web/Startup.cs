@@ -29,7 +29,8 @@ namespace Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddDbContext<ZemartDBContext>(options =>
-            options.UseMySQL(Configuration.GetConnectionString("DefaultConnectionString")));
+            options.UseNpgsql(Configuration.GetConnectionString("PSQLConnectionString"), b => b.MigrationsAssembly("Web")));
+            // options.UseMySQL(Configuration.GetConnectionString("DefaultConnectionString")));
 
             // services.AddDataProtection /
             services.AddControllersWithViews();
