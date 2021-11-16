@@ -40,8 +40,8 @@ namespace Infrastructure.Data
             var Faker = new FakeData();
             Faker.Generate(new SeederModel
             {
-                numberOfCategory = 5,
-                numberOfProduct = 50,
+                numberOfCategory = 12,
+                numberOfProduct = 200,
                 numberOfCategoryPerDeep = 4,
                 categoryDeepLevel = 2
 
