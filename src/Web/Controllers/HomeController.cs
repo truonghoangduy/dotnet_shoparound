@@ -25,7 +25,7 @@ namespace Web.Controllers
         public IActionResult Index()
         {
             var Catergories = _context.Catergories.ToList().Where((cat) => cat.ParrentId == null).ToList();
-            var FeatureProduct = _context.Products.ToList().Take(3);
+            var FeatureProduct = _context.Products.ToList().TakeLast(3);
             var Products = _context.Products.ToList();
             ViewBag.FeatureProduct = FeatureProduct;
             ViewBag.Products = Products;

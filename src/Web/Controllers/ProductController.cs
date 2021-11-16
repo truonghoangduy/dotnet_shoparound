@@ -1,0 +1,47 @@
+using System;
+using System.Linq;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace Web.Controllers
+{
+    public class ProductController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+        private readonly ZemartDBContext _context;
+
+        public ProductController(ILogger<HomeController> logger, ZemartDBContext context)
+        {
+            _logger = logger;
+            _context = context;
+        }
+
+        public IActionResult Index(int id)
+        {
+            var Product = _context.Products.Find(id);
+            return View(Product);
+        }
+
+
+        public IActionResult ProductByCategory(int catergoryId)
+        {
+            // Filter by cateroryID
+            // TODO LearnInclude Eger Loading
+            var ProductsByCat = _context.Products
+            .Where(product => product.CatergoryID == catergoryId).Include(product => product.Catergory).ToList();
+            // .ToList();
+            // Pro
+
+            // UI Things
+            ViewBag.CurrentCatergoryID = catergoryId;
+
+            //TODO change to using ViewModel [including variable using by this scope]
+            return View(ProductsByCat);
+        }
+
+
+
+    }
+}
