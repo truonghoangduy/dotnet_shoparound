@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Home Page";
+    // View could override their choseein layout
+}
+@model ApplicationCore.Entities.Product;
+<!-- Content -->
+<div id="content">
+    <div class="productViewContainer">
+        <div class="productImg">
+            <img src="~/@Model.ImageURL">
+        </div>
+        <div class="productInfo">
+            <div class="productInfoName">@Model.Name</div>
+            <div class="productInfoDepictions">@Model.Description</div>
+            <div style="display: flex;">
+                <strong class="price priceDrop">$@Model.Price</strong>
+                @{
+                    var currentPrice = @Model.Price - (@Model.PromotionPrice * 100 / @Model.Price);
+                    <strong class="price">@currentPrice</strong>
+                }
+            </div>
+            <strong class="price">Save @Model.PromotionPrice %</strong>
+            <button class="buyButton">Buy now >>></button>
+        </div>
+    </div>
+</div>
+<!-- End Content -->

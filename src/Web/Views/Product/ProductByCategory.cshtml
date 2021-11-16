@@ -1,10 +1,10 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
     // View could override their choseein layout
 }
 @using ApplicationCore.Entities;
 @using Web.Helper
-
+@model List<Product>;
 <!-- Content -->
 <div id="content">
     <!-- Content Slider -->
@@ -26,8 +26,7 @@
 
     @* // ProductView *@
     @{
-        // TODO VIEW BY 3, 10, 20 Product Per Page
-        List<List<Product>> chunkedProducts = (ViewBag.Products as List<Product>).ChunkBy(3);
+        List<List<Product>> chunkedProducts = (@Model).ChunkBy(3);
     }
     @for (int i = 0; i < chunkedProducts.Count; i++)
     {
@@ -44,7 +43,7 @@
 
                     <li class="@lastProductStyle">
                         <a href="@Url.Action("Index","Product",new {ID = @item.value.ID})">
-                            <img src="@item.value.ImageURL" alt="" />
+                            <img src="~/@item.value.ImageURL" alt="" />
                         </a>
                         <div class="product-info">
                             <h3>@item.value.Name</h3>
