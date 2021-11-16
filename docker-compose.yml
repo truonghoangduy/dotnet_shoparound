@@ -16,17 +16,30 @@ services:
   #     MYSQL_PASSWORD: Test.1234
   
   postgres:
-    container_name: postgres-shoparound-c-sharp
+    container_name: postgres-shoparound
     image: postgres
     environment:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: shoparound
     volumes:
-       - postgres:/data/postgres
+       - shoparound:/data/postgres
     ports:
       - "5432:5432"
     restart: always
 
+  shopearound_identity:
+    container_name: postgres-shopearound-identity
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: shopearound-identity
+    volumes:
+       - shopearound-identity:/data/postgres
+    ports:
+      - "5433:5433"
+    restart: always
+
+
 volumes:
-  db_data:
-  postgres:
+  shoparound:
+  shopearound-identity:
