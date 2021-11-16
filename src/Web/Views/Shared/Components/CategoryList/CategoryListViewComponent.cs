@@ -9,9 +9,9 @@ namespace Web.Views.Shared.Components.CategoryListViewComponent
 {
     public class CategoryListViewComponent : ViewComponent
     {
-        ZemartDBContext _context;
+        ShopDBContext _context;
 
-        public CategoryListViewComponent(ZemartDBContext context)
+        public CategoryListViewComponent(ShopDBContext context)
         {
             _context = context;
         }

@@ -3,15 +3,17 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Web.Migrations
+namespace Infrastructure.Data.Migrations
 {
-    [DbContext(typeof(ZemartDBContext))]
-    partial class ZemartDBContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ShopDBContext))]
+    [Migration("20211116080524_MainModel")]
+    partial class MainModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,6 +54,9 @@ namespace Web.Migrations
                     b.Property<int>("CatergoryID")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -66,6 +71,9 @@ namespace Web.Migrations
 
                     b.Property<int>("PromotionPrice")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("ID");
 

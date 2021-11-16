@@ -28,12 +28,15 @@ namespace Web
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddDbContext<ZemartDBContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("PSQLConnectionString"), b => b.MigrationsAssembly("Web")));
+
+            services.AddDbContext<ShopDBContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("PSQLConnectionString"), b => b.MigrationsAssembly("Infrastructure")));
             // options.UseMySQL(Configuration.GetConnectionString("DefaultConnectionString")));
 
             // services.AddDataProtection /
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddRazorPages();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +53,7 @@ namespace Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -59,6 +62,7 @@ namespace Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }

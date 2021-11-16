@@ -8,6 +8,8 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="~/css/style.css" type="text/css" media="all" />
     <link rel="stylesheet" href="~/css/product_style.css" type="text/css" media="all" />
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+
 
     <!--[if lte IE 6]><link rel="stylesheet" href="css/ie6.css" type="text/css" media="all" /><![endif]-->
     <script src="~/js/jquery-1.4.1.min.js" type="text/javascript"></script>
@@ -45,6 +47,7 @@
         <!-- Main -->
         <div id="main">
             <div class="cl">&nbsp;</div>
+            @RenderSection("Scripts",true)
             @RenderBody()
             <!-- Sidebar -->
             <div id="sidebar">
@@ -58,10 +61,10 @@
                             <label>Category</label>
                             <select class="field">
                                 <option value="">-- Select Category --</option>
-                                @foreach (var item in ViewBag.Catergories as List<Catergory>)
-                                {
+                                @* @foreach (var item in ViewBag.Catergories as List<Catergory>)
+                                    {
                                     <option value=@item.ID>@item.Name</option>
-                                }
+                                    } *@
                             </select>
                             <div class="inline-field">
                                 <label>Price</label>

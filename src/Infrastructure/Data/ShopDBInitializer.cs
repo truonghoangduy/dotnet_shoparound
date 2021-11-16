@@ -23,12 +23,12 @@ namespace Infrastructure.Data
 
     }
 
-    public static class ZemartDBInitializer
+    public static class ShopDBInitializer
     {
 
-        public static void Initialize(ZemartDBContext context, IServiceProvider services, IWebHostEnvironment webHost)
+        public static void Initialize(ShopDBContext context, IServiceProvider services, IWebHostEnvironment webHost)
         {
-            var logger = services.GetRequiredService<ILogger<ZemartDBContext>>();
+            var logger = services.GetRequiredService<ILogger<ShopDBContext>>();
             context.Database.EnsureCreated();
             if (context.Products.Any())
             {
@@ -61,10 +61,10 @@ namespace Infrastructure.Data
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var dbcontext = services.GetRequiredService<ZemartDBContext>();
+                    var dbcontext = services.GetRequiredService<ShopDBContext>();
                     var webHost = services.GetService<IWebHostEnvironment>();
                     var applocationDomain = services.GetService<IApplicationBuilder>();
-                    ZemartDBInitializer.Initialize(dbcontext, services, webHost);
+                    ShopDBInitializer.Initialize(dbcontext, services, webHost);
                 }
                 catch (Exception ex)
                 {

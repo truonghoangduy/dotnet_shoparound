@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
-    public class ZemartDBContext : DbContext
+    public class ShopDBContext : DbContext
     {
-        public ZemartDBContext(DbContextOptions<ZemartDBContext> options) : base(options)
+        public ShopDBContext(DbContextOptions<ShopDBContext> options) : base(options)
         {
 
         }

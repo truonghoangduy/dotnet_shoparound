@@ -14,9 +14,9 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ZemartDBContext _context;
+        private readonly ShopDBContext _context;
 
-        public HomeController(ILogger<HomeController> logger, ZemartDBContext context)
+        public HomeController(ILogger<HomeController> logger, ShopDBContext context)
         {
             _logger = logger;
             _context = context;

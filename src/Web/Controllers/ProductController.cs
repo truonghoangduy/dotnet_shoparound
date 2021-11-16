@@ -10,9 +10,9 @@ namespace Web.Controllers
     public class ProductController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ZemartDBContext _context;
+        private readonly ShopDBContext _context;
 
-        public ProductController(ILogger<HomeController> logger, ZemartDBContext context)
+        public ProductController(ILogger<HomeController> logger, ShopDBContext context)
         {
             _logger = logger;
             _context = context;

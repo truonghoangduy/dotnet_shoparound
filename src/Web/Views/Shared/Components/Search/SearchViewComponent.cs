@@ -9,9 +9,9 @@ namespace Web.Views.Shared.Components.Search
 {
     public class SearchViewComponent : ViewComponent
     {
-        ZemartDBContext _context;
+        ShopDBContext _context;
 
-        public SearchViewComponent(ZemartDBContext context)
+        public SearchViewComponent(ShopDBContext context)
         {
             _context = context;
         }

@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Web.Migrations
+namespace Infrastructure.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class MainModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +40,9 @@ namespace Web.Migrations
                     ImageURL = table.Column<string>(type: "text", nullable: true),
                     PromotionPrice = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<int>(type: "integer", nullable: false),
-                    CatergoryID = table.Column<int>(type: "integer", nullable: false)
+                    CatergoryID = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {

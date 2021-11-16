@@ -15,7 +15,7 @@ namespace Web
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            ZemartDBInitializer.SeedDatabase(host);
+            ShopDBInitializer.SeedDatabase(host);
 
             host.Run();
         }
