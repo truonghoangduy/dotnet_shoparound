@@ -7,7 +7,7 @@ namespace ApplicationCore.Entities
 
     // TODO Render small and big img by using servies DI
 
-    public class Product
+    public class Product : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
