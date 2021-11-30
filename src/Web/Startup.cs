@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationCore.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Web.Services.User;
 
 namespace Web
 {
@@ -32,10 +34,16 @@ namespace Web
             services.AddDbContext<ShopDBContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("PSQLConnectionString"), b => b.MigrationsAssembly("Infrastructure")));
             // options.UseMySQL(Configuration.GetConnectionString("DefaultConnectionString")));
+            services.AddScoped<IUserService, UserService>();
 
             // services.AddDataProtection /
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddRazorPages();
+            services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation()
+            .AddSessionStateTempDataProvider();
+            services.AddSession();
+
+            // services.AddRazorPages();
+
 
         }
 
@@ -51,17 +59,18 @@ namespace Web
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
-
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
+
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllers();
+                // endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
         }
