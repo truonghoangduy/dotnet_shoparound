@@ -4,14 +4,16 @@ namespace ApplicationCore.Entities
 {
 
     // TODO Order back-lock maybe
-    class Order
+    public class Order
     {
         public List<OrderDetail> OrderDetails { set; get; }
     }
 
-    class OrderDetail
+    public class OrderDetail
     {
         public string ProductID { set; get; }
+        public Product Product { set; get; }
+
         public int Quantity { set; get; }
     }
 }

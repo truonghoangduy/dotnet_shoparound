@@ -9,5 +9,7 @@ namespace ApplicationCore.Entities
     // Add profile data for application users by adding properties to the AppUser class
     public class AppUser : IdentityUser
     {
+        public string FirstName { set; get; }
+        public string LastName { set; get; }
     }
 }
