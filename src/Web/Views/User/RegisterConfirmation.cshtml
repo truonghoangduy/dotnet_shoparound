@@ -1,0 +1,17 @@
+@{
+    Layout = "~/Views/Shared/_CenterLayout.cshtml";
+
+}
+
+@{
+    if (ViewBag.DisplaceConfirmAccountLink)
+    {
+        <p>
+            This app currently not support email, click here to activate <a href="@ViewBag.EmailConfirmationLink">Click here</a>
+        </p>
+    }
+    else
+    {
+        <p>Account activation link is sended via your Email : @ViewBag.Email</p>
+    }
+}
