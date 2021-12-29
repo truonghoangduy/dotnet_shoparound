@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using Web.Models;
 using System.Security.Claims;
+using ApplicationCore.Interfaces;
 
-namespace Web.Services.User
+namespace Web.Services
 {
     public class UserService : IUserService
     {
