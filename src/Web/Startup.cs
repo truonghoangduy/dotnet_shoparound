@@ -12,7 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Web.Services.User;
+using Web.Services;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Web
 {
@@ -30,16 +32,23 @@ namespace Web
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-
             services.AddDbContext<ShopDBContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("PSQLConnectionString"), b => b.MigrationsAssembly("Infrastructure")));
             // options.UseMySQL(Configuration.GetConnectionString("DefaultConnectionString")));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICartService, CartService>();
+
+            services.AddScoped<IOrderService, OrderService>();
+
+
 
             // services.AddDataProtection /
             services.AddControllersWithViews()
             .AddRazorRuntimeCompilation()
-            .AddSessionStateTempDataProvider();
+            .AddSessionStateTempDataProvider().AddJsonOptions(o =>
+            {
+                o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });
             services.AddSession();
 
             // services.AddRazorPages();

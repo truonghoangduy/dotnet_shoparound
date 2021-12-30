@@ -19,9 +19,16 @@ namespace Web.Areas.Identity
             {
                 services.AddDbContext<WebIdentityDBContext>(options =>
                     options.UseNpgsql(
-                        context.Configuration.GetConnectionString("WebIdentityDBContextConnection"), b => b.MigrationsAssembly("Infrastructure")));
+                        context.Configuration.GetConnectionString("WebIdentityDBContextConnection"),
+                        b => b.MigrationsAssembly("Infrastructure")));
 
-                services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                services.AddDefaultIdentity<AppUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.User.RequireUniqueEmail = true;
+                }
+
+                )
                     .AddEntityFrameworkStores<WebIdentityDBContext>();
             });
         }
