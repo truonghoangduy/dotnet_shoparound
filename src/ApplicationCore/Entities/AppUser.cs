@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using ApplicationCore.Entities;
+using System.Collections;
 
 namespace ApplicationCore.Entities
 {
@@ -11,5 +14,8 @@ namespace ApplicationCore.Entities
     {
         public string FirstName { set; get; }
         public string LastName { set; get; }
+
+        public List<Order> orders { set; get; }
+
     }
 }

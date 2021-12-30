@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using ApplicationCore.Enum;
-
 namespace ApplicationCore.Entities
 {
 
     // TODO Order back-lock maybe
-    public class Order : BaseEntity
+    public class Cart : BaseEntity
     {
 
         [Key]
@@ -18,16 +16,13 @@ namespace ApplicationCore.Entities
 
         public String AppUserID { set; get; }
         public AppUser AppUser { set; get; }
-        public List<OrderDetail> OrderDetails { set; get; }
-
-        public TransactionStatus status { set; get; }
-
+        public List<CartDetail> CartDetails { set; get; }
 
         public bool isEmpty
         {
             get
             {
-                if (this.OrderDetails.Count > 0)
+                if (this.CartDetails.Count > 0)
                     return false;
                 return true;
             }
@@ -36,22 +31,22 @@ namespace ApplicationCore.Entities
         {
             get
             {
-                if (this.OrderDetails == null)
+                if (this.CartDetails == null)
                     return 0;
-                return this.OrderDetails.Sum(order => order.Product.PromotionPrice * order.Quantity);
+                return this.CartDetails.Sum(order => order.Product.PromotionPrice * order.Quantity);
             }
         }
+
+
     }
 
-    public class OrderDetail
+    public class CartDetail
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { set; get; }
 
-        public Order Order { set; get; }
-
-        public int OrderId { set; get; }
+        public Cart Cart { set; get; }
         public int ProductID { set; get; }
         public Product Product { set; get; }
 
