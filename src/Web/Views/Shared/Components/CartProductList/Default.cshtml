@@ -1,0 +1,14 @@
+@model List<ApplicationCore.Entities.Catergory>;
+<div class="box categories">
+    <h2>Categories <span></span></h2>
+    <div class="box-content">
+        <ul>
+            @foreach (var item in @Model)
+            {
+                <li>
+                    <a href="@Url.Action("ProductByCategory","Product",new {catergoryId = @item.ID})">@item.Name</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

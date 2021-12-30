@@ -1,0 +1,39 @@
+@{
+    Cart cartInfo = null;
+    var CartURL = Url.Action("Info", "Cart");
+    if (ViewBag.CartInfo != null)
+    {
+        cartInfo = ViewBag.CartInfo as Cart;
+    }
+}
+<div>
+    <a asp-action="Index" asp-controller="Cart" class="cart-link">Your Shopping Cart</a>
+    @{
+        if (cartInfo != null)
+        {
+            <div class="cl">&nbsp;</div>
+            <span>Items: <strong id="item-count">@cartInfo.CartDetails.Count</strong></span>
+            <span>Cost: <strong id="item-total">$@cartInfo.Total</strong></span>
+        }
+    }
+
+</div>
+
+<script>
+    $(document).on("add-to-cart", async (eventObject) => {
+        console.log("OKKKK :>>>")
+        var request = await $.ajax({
+            method: "GET",
+            url: '@Url.Action("Info","Cart")'
+        });
+        var cartPreview = {
+            itemsCount: request["orderDetails"]["$values"].length,
+            totalPrice: request["total"]
+        }
+        console.log(request["orderDetails"]["$values"])
+        console.log(cartPreview)
+        $("#item-count").val(cartPreview.itemsCount)
+        $("#item-total").val(cartPreview.totalPrice)
+
+    })
+</script>
