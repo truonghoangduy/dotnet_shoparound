@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Web.Services.User;
 using System.Threading.Tasks;
 using ApplicationCore.Exceptions;
 using ApplicationCore.Interfaces;
 using Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Web.Services;
 
 namespace Web.Controllers
 {
@@ -20,6 +20,11 @@ namespace Web.Controllers
         public async Task<IActionResult> Profile()
         {
             var currentUser = await this._userServive.GetByContext(HttpContext.User);
+            if (currentUser == null)
+            {
+                await this._userServive.SignOut();
+                return RedirectToAction();
+            }
             return View(currentUser);
         }
 

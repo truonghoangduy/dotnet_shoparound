@@ -4,8 +4,8 @@
     Layout = "~/Views/Shared/_CenterLayout.cshtml";
 
 }
-<h1>@ViewData["Title"]</h1>
-<div class="m-3 row d-flex justify-content-center align-items-center">
+@* <h1>@ViewData["Title"]</h1> *@
+<div class="m-3 row col d-flex justify-content-center align-items-center">
     <div class="col-md-4">
         <section>
             <form id="account" method="post">
@@ -22,13 +22,14 @@
                     <input asp-for="Password" class="form-control" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group  d-flex justify-content-between">
                     <div class="checkbox">
                         <label asp-for="RememberMe">
                             <input asp-for="RememberMe" />
                             @Html.DisplayNameFor(m => m.RememberMe)
                         </label>
                     </div>
+                    <a asp-action="Register" asp-controller="User">Register an account</a>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Log in</button>

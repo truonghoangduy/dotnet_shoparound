@@ -1,18 +1,165 @@
+@using Web.Helper
+@using Web.Services;
+@using ApplicationCore.Interfaces;
+@inject IOrderService OrderServiceHelper;
+@* @model ApplicationCore.Entities.AppUser;
+    @{
+    Layout = "~/Views/Shared/_CenterLayout.cshtml";
+    }
+    <div class="m-3 row d-flex justify-content-center align-items-center">
+    <div class="col-md-6">
+    <h1>Hello 👋 @Model.UserName </h1>
+    <h2>Email : @Model.Email</h2>
+    <div class="d-flex justify-content-between">
+    <a asp-controller="Home" asp-action="Index">Go back to Home</a>
+    <form class="form-inline" asp-controller="User" asp-action="Logout"
+    asp-route-returnUrl="@Url.Action("Index","Home")" method="post">
+    <button type="submit" class="nav-link btn btn-link">Click here to Logout</button>
+    </form>
+    </div>
+    </div>
+
+    </div> *@
+
+
 @model ApplicationCore.Entities.AppUser;
 @{
+    ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_CenterLayout.cshtml";
 }
-<div class="m-3 row d-flex justify-content-center align-items-center">
-    <div class="col-md-6">
-        <h1>Hello 👋 @Model.UserName </h1>
-        <h2>Email : @Model.Email</h2>
-        <div class="d-flex justify-content-between">
-            <a asp-controller="Home" asp-action="Index">Go back to Home</a>
-            <form class="form-inline" asp-controller="User" asp-action="Logout"
-                asp-route-returnUrl="@Url.Action("Index","Home")" method="post">
-                <button type="submit" class="nav-link btn btn-link">Click here to Logout</button>
-            </form>
-        </div>
 
+<link rel="stylesheet" href="~/css/cart_ui.css">
+<div class="container">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h5 class="mb-3">User information</h5>
+                        <div class="form-row mb-3">
+                            <div class="col">
+                                <label for="exampleInputEmail1">First name</label>
+                                <input type="text" class="form-control" placeholder="First name"
+                                    value="@Model.FirstName">
+                            </div>
+                            <div class="col">
+                                <label for="exampleInputEmail1">Last name</label>
+                                <input type="text" class="form-control" placeholder="Last name" value="@Model.LastName">
+                            </div>
+                        </div>
+
+                        <div class="form-row mb-3">
+                            <div class="col">
+                                <label for="exampleInputEmail1">Email</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">#</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="@Model.Email"
+                                        aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="exampleInputEmail1">Phone</label>
+                                <input type="text" class="form-control" placeholder="@Model.PhoneNumber">
+                            </div>
+                        </div>
+                        <a asp-controller="Home" asp-action="Index">Go back to Home</a>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Order status</h5>
+                    </div>
+                    @{
+                        foreach (var item in (OrderServiceHelper as OrderService).GetOrders(Model))
+                        {
+                            var order_status_color =  TransactionStatusColorHelper.ColorByTransactionStatus(item.status);
+
+
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    <table class="table shoping-cart-table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="desc">
+                                                    <h3>
+                                                        <a asp-action="Index" asp-controller="Order"
+                                                    asp-route-id="@item.ID" class="text-navy">
+                                                           ID #@item.ID
+                                                        </a>
+                                                    </h3>
+                                                    <p class="small"> Create at :
+                                                        @item.CreatedAt
+                                                    </p>
+                                                    <dl class="small m-b-none">
+                                                        <dt>status</dt>
+                                                        <dd class="@order_status_color text-white">@item.status</dd>
+                                                    </dl>
+                                                </td>
+                                                <td>
+                                                    items : @item.OrderDetails.Count
+                                                </td>
+                                                <td>
+                                                    <h4>
+                                                        $@item.Total
+                                                    </h4>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-md-3 sticky-top">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Support</h5>
+                    </div>
+                    <div class="ibox-content text-center">
+                        <h3><i class="fa fa-phone"></i> +43 100 783 001</h3>
+                        <span class="small">
+                            Please contact with us if you have any questions. We are avalible 24h.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-content">
+
+                        <p class="font-bold">
+                            Other products you may be interested
+                        </p>
+                        <hr>
+                        <div>
+                            <a href="#" class="product-name"> Product 1</a>
+                            <div class="small m-t-xs">
+                                Many desktop publishing packages and web page editors now.
+                            </div>
+                            <div class="m-t text-righ">
+
+                                <a href="#" class="btn btn-xs btn-outline btn-primary">Info <i
+                                        class="fa fa-long-arrow-right"></i> </a>
+                            </div>
+                        </div>
+                        <hr>
+                        <div>
+                            <a href="#" class="product-name"> Product 2</a>
+                            <div class="small m-t-xs">
+                                Many desktop publishing packages and web page editors now.
+                            </div>
+                            <div class="m-t text-righ">
+
+                                <a href="#" class="btn btn-xs btn-outline btn-primary">Info <i
+                                        class="fa fa-long-arrow-right"></i> </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
