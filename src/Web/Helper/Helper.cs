@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ApplicationCore.Enum;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Web.Helper
 {
@@ -21,6 +24,54 @@ namespace Web.Helper
                 .GroupBy(x => x.Index / chunkSize)
                 .Select(x => x.Select(v => v.Value).ToList())
                 .ToList();
+        }
+    }
+
+    public static class TransactionStatusColorHelper
+    {
+        public static String ColorByTransactionStatus(TransactionStatus status)
+        {
+            var order_status_color = "";
+            if (status == TransactionStatus.WaitForComformation)
+            {
+                order_status_color = "bg-warning";
+            }
+            else if (status == TransactionStatus.Comformed)
+            {
+                order_status_color = "bg-info";
+
+            }
+            else if (status == TransactionStatus.Pending)
+            {
+                order_status_color = "bg-dark";
+
+            }
+            else if (status == TransactionStatus.Shipping)
+            {
+                order_status_color = "bg-danger";
+
+            }
+            else if (status == TransactionStatus.Shipping)
+            {
+                order_status_color = "bg-success";
+
+            }
+            return order_status_color;
+        }
+
+    }
+
+    public static class SessionHelper
+    {
+        public static void SetObjectAsJson(this ISession session, string key, object value)
+        {
+            session.SetString(key, JsonConvert.SerializeObject(value));
+        }
+
+        public static T GetObjectFromJson<T>(this ISession session, string key)
+        {
+            var value = session.GetString(key);
+            return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
         }
     }
 }
