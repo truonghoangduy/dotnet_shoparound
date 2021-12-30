@@ -1,0 +1,178 @@
+@using ApplicationCore.Enum
+@using Web.Helper
+@model ApplicationCore.Entities.Order;
+@{
+    ViewData["Title"] = "Order";
+    Layout = "~/Views/Shared/_CenterLayout.cshtml";
+    var order_status_color = TransactionStatusColorHelper.ColorByTransactionStatus(Model.status);
+
+}
+
+<link rel="stylesheet" href="~/css/cart_ui.css">
+<div class="container">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <div class="d-flex flex-row justify-content-between">
+                            <div class="d-flex flex-row justify-content-between">
+                                <h5 class="mr-3">Order - #@Model.ID</h5>
+                                <h6 class="badge @order_status_color text-white">Status @Model.status</h6>
+                            </div>
+                            <h6 class="mr-3">@Model.CreatedAt</h6>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <h5 class="mb-3">User information</h5>
+                        <div class="form-row mb-3">
+                            <div class="col">
+                                <label for="exampleInputEmail1">First name</label>
+                                <input type="text" class="form-control" placeholder="First name"
+                                    value="@Model.AppUser.FirstName" disabled>
+                            </div>
+                            <div class="col">
+                                <label for="exampleInputEmail1">Last name</label>
+                                <input type="text" class="form-control" placeholder="Last name"
+                                    value="@Model.AppUser.LastName" disabled>
+                            </div>
+                        </div>
+
+                        <div class="form-row mb-3">
+                            <div class="col">
+                                <label for="exampleInputEmail1">Email</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">#</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="@Model.AppUser.Email"
+                                        aria-describedby="basic-addon1" disabled>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="exampleInputEmail1">Phone</label>
+                                <input type="text" class="form-control" placeholder="@Model.AppUser.PhoneNumber"
+                                    disabled>
+                            </div>
+                        </div>
+
+                        <h6>Shipping Address</h6>
+                        <div class="form-group">
+                            <input type="email" class="form-control" id="exampleFormControlInput1"
+                                disabled="@(((int)Model.status) == ((int)@TransactionStatus.WaitForComformation)?null:"disabled")"
+                                placeholder=".... ..... .....">
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <span class="pull-right">(<strong>@Model.OrderDetails.Count</strong>) items</span>
+                        <h5>Items in your order</h5>
+                    </div>
+
+                    @* Item render block *@
+                    @{
+                        if (@Model.OrderDetails != null)
+                        {
+                            foreach (var item in @Model.OrderDetails)
+                            {
+                                <div class="ibox-content">
+                                    <div class="table-responsive">
+                                        <table class="table shoping-cart-table">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="90">
+                                                        <img src="~@Url.Content(item.Product.ImageURL)"
+                                                    class="cart-product-imitation">
+                                                    </td>
+                                                    <td class="desc">
+                                                        <h3>
+                                                            <a asp-action="Index" asp-controller="Product"
+                                                    asp-route-id="@item.Product.ID" class="text-navy">
+                                                                @item.Product.Name
+                                                            </a>
+                                                        </h3>
+                                                        <p class="small">
+                                                            @item.Product.Catergory
+                                                        </p>
+                                                        <dl class="small m-b-none">
+                                                            <dt>Description lists</dt>
+                                                            <dd>@item.Product.Description</dd>
+                                                        </dl>
+                                                    </td>
+
+                                                    <td>
+                                                        $@item.Product.PromotionPrice
+                                                        <s class="small text-muted">$@item.Product.Price</s>
+                                                    </td>
+                                                    <td width="95">
+                                                        <input type="number" disabled id="@item.ProductID-quantity"
+                                                    class="form-control quantity-btn" value=@item.Quantity>
+                                                    </td>
+                                                    <td>
+                                                        <h4>
+                                                            $@item.OrderDetailTotalPrice
+                                                        </h4>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                    }
+
+
+                    @* Helper box *@
+                    <div class="ibox-content">
+                        @if (Model.status == TransactionStatus.WaitForComformation)
+                        {
+                            <a asp-action="UpdateStatus" asp-controller="Order"
+                            asp-route-status="@((int)TransactionStatus.Comformed)" class="btn btn-primary pull-right"><i
+                                class="fa fa fa-shopping-cart btn"></i>
+                                Comform</a>
+                        }
+                        <a class="btn btn-white" asp-action="Index" asp-controller="Home"><i
+                                class="fa fa-arrow-left"></i> Continue shopping</a>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-3 sticky-top">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Cart Summary</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <span>
+                            Total
+                        </span>
+                        <h2 class="font-bold">
+                            $ @Model.Total
+                        </h2>
+
+                        <hr>
+                        <span class="text-muted small">
+                            *For United States, France and Germany applicable sales tax will be applied
+                        </span>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Support</h5>
+                    </div>
+                    <div class="ibox-content text-center">
+                        <h3><i class="fa fa-phone"></i> +43 100 783 001</h3>
+                        <span class="small">
+                            Please contact with us if you have any questions. We are avalible 24h.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

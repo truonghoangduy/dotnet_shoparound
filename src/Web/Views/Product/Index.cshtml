@@ -20,8 +20,31 @@
                 }
             </div>
             <strong class="price">Save @Model.PromotionPrice %</strong>
-            <button class="buyButton">Buy now >>></button>
+            <a class="button">
+                <button class="buyButton">Buy now</button>
+            </a>
+            <a id="btn-add-to-cart" class="btn button-pirmary" asp-controller="Cart" asp-action="add"
+                asp-route-id="@Model.ID"> Add to cart
+            </a>
         </div>
     </div>
 </div>
+
+@* @section Scripts{ *@
+<script>
+    $(document).ready(() => {
+        initEvent();
+    })
+    function initEvent() {
+        $("#btn-add-to-cart").on("click", () => {
+            // TODO add dataurl
+            $.ajax({
+                url
+            })
+            $(document).trigger("add-to-cart")
+        });
+    }
+
+</script>
+@* } *@
 <!-- End Content -->
