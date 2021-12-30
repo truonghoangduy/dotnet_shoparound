@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Identity.Data.Migrations
 {
     [DbContext(typeof(WebIdentityDBContext))]
-    [Migration("20211130043103_IndentityModel")]
+    [Migration("20211228084302_IndentityModel")]
     partial class IndentityModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,6 +89,118 @@ namespace Infrastructure.Identity.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.Catergory", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ParrentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ParrentId");
+
+                    b.ToTable("Catergory");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.Order", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AppUserID")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AppUserID");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.OrderDetail", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("OrderDetail");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.Product", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("CatergoryID")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageURL")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PromotionPrice")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CatergoryID");
+
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -225,6 +337,54 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("ApplicationCore.Entities.Catergory", b =>
+                {
+                    b.HasOne("ApplicationCore.Entities.Catergory", "Parrent")
+                        .WithMany()
+                        .HasForeignKey("ParrentId");
+
+                    b.Navigation("Parrent");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.Order", b =>
+                {
+                    b.HasOne("ApplicationCore.Entities.AppUser", "AppUser")
+                        .WithMany("orders")
+                        .HasForeignKey("AppUserID");
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.OrderDetail", b =>
+                {
+                    b.HasOne("ApplicationCore.Entities.Order", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApplicationCore.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.Product", b =>
+                {
+                    b.HasOne("ApplicationCore.Entities.Catergory", "Catergory")
+                        .WithMany()
+                        .HasForeignKey("CatergoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Catergory");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -274,6 +434,16 @@ namespace Infrastructure.Identity.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.AppUser", b =>
+                {
+                    b.Navigation("orders");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
                 });
 #pragma warning restore 612, 618
         }

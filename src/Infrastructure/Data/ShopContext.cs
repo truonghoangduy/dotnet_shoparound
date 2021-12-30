@@ -13,9 +13,17 @@ namespace Infrastructure.Data
         }
         public DbSet<Product> Products { set; get; }
         public DbSet<Catergory> Catergories { set; get; }
+        public DbSet<Order> Orders { set; get; }
+        public DbSet<OrderDetail> OrderDetails { set; get; }
+
+        public DbSet<Cart> Carts { set; get; }
+        public DbSet<CartDetail> CartDetails { set; get; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
 
         }
 
