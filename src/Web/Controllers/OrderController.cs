@@ -57,11 +57,11 @@ namespace Web.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("checkout/status/{status}")]
-        public async Task<IActionResult> UpdateStatus(int status)
+        [Route("checkout/{id}/status/{status}")]
+        public async Task<IActionResult> UpdateStatus(int id, int status)
         {
             var currentUser = await this._userServive.GetByContext(HttpContext.User);
-            var order = _orderService.Info(currentUser);
+            var order = _orderService.Info(currentUser, id);
             order = _orderService.UpdateOrderStatus((TransactionStatus)status, order);
             return RedirectToAction("Index", new
             {

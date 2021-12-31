@@ -5,6 +5,10 @@ using ApplicationCore.Interfaces;
 using Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Web.Services;
+using Web.ViewModels;
+using ApplicationCore.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Web.Controllers
 {
@@ -33,6 +37,49 @@ namespace Web.Controllers
         {
             returnUrl ??= Url.Content("~/");
             await this._userServive.SignOut();
+            return Redirect(returnUrl);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> AddAddress(string returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+            // if (Model)
+            // {
+
+            // }
+            var currentUser = await this._userServive.GetByContext(HttpContext.User);
+            // var shipmentDetail = viewModel.getShipmentDetailFromAppUser(currentUser);
+            await this._userServive.AddAddress(new ShipmentDetail().FormAppUser(currentUser));
+            return Redirect(returnUrl);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UpdateAddress([FromBody] ShipmentAddressViewModelList viewModel, string returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+            // if (Model)
+            // {
+
+            // }
+            var currentUser = await this._userServive.GetByContext(HttpContext.User);
+            var list_shipmentDetail = viewModel.data.Select(viewModelData => viewModelData.getShipmentDetailFromAppUser(currentUser)).ToList();
+            this._userServive.UpdateAddress(list_shipmentDetail, currentUser);
+            return Redirect(returnUrl);
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("user/RemoveAddress/{id}")]
+
+        public async Task<IActionResult> RemoveAddress(int id, string returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+            var currentUser = await this._userServive.GetByContext(HttpContext.User);
+            var currentSelectedAddress = await this._userServive.GetAddressById(currentUser, id);
+            await this._userServive.RemoveAddress(currentSelectedAddress);
             return Redirect(returnUrl);
         }
 

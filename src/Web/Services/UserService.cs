@@ -9,6 +9,8 @@ using System.Text;
 using Web.Models;
 using System.Security.Claims;
 using ApplicationCore.Interfaces;
+using Infrastructure.Data;
+using System.Linq;
 
 namespace Web.Services
 {
@@ -16,13 +18,17 @@ namespace Web.Services
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly ShopDBContext _context;
+
         public UserService(
             UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager
+            SignInManager<AppUser> signInManager,
+            ShopDBContext context
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
         public IEnumerable<AppUser> GetAll()
         {
@@ -50,6 +56,30 @@ namespace Web.Services
 
         }
 
+        public async Task AddAddress(ShipmentDetail address)
+        {
+            _context.ShipmentDetails.Update(address);
+            _context.SaveChanges();
+        }
+
+        public async Task<ShipmentDetail> GetAddressById(AppUser user, int ID)
+        {
+            var address = _context.ShipmentDetails.FirstOrDefault(address => address.AppUserID == user.Id && address.ID == ID);
+            return address;
+        }
+
+
+        public async Task RemoveAddress(ShipmentDetail address)
+        {
+            _context.ShipmentDetails.Remove(address);
+            await _context.SaveChangesAsync();
+        }
+
+        public List<ShipmentDetail> GetUserShipmentAddress(AppUser user)
+        {
+            var listOfAddress = _context.ShipmentDetails.Where(address => address.AppUserID == user.Id).ToList();
+            return listOfAddress;
+        }
         public async Task<IdentityResult> RegisterAsync(RegisterViewModel usr)
         {
             var user = new AppUser { UserName = usr.Email, Email = usr.Email };
@@ -57,6 +87,16 @@ namespace Web.Services
             return result;
             // throw new System.NotImplementedException();
         }
+
+        public void UpdateAddress(List<ShipmentDetail> list_shipmentDetail, AppUser user)
+        {
+            // DUMP
+            var oldShipmentDetails = _context.ShipmentDetails.Where(detail => detail.AppUserID == user.Id).ToList();
+            _context.ShipmentDetails.RemoveRange(oldShipmentDetails);
+            _context.ShipmentDetails.UpdateRange(list_shipmentDetail);
+            _context.SaveChanges();
+        }
+
         public async Task<SignInResult> SignInWithPassword(LoginViewModel model)
         {
             return await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
