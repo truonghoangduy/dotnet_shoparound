@@ -2,6 +2,7 @@
 @using Web.Services;
 @using ApplicationCore.Interfaces;
 @inject IOrderService OrderServiceHelper;
+@inject IUserService UserServiceHelper;
 @* @model ApplicationCore.Entities.AppUser;
     @{
     Layout = "~/Views/Shared/_CenterLayout.cshtml";
@@ -36,7 +37,7 @@
                 <div class="ibox">
                     <div class="ibox-content">
                         <h5 class="mb-3">User information</h5>
-                        <div class="form-row mb-3">
+                        <div class="row mb-3">
                             <div class="col">
                                 <label for="exampleInputEmail1">First name</label>
                                 <input type="text" class="form-control" placeholder="First name"
@@ -48,25 +49,108 @@
                             </div>
                         </div>
 
-                        <div class="form-row mb-3">
+                        <div class="row mb-3">
                             <div class="col">
                                 <label for="exampleInputEmail1">Email</label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">#</span>
+                                        <span class="input-group-text material-icons" id="basic-addon1">mail</span>
                                     </div>
                                     <input type="text" class="form-control" placeholder="@Model.Email"
-                                        aria-describedby="basic-addon1">
+                                        aria-describedby="basic-addon1" disabled>
                                 </div>
                             </div>
                             <div class="col">
                                 <label for="exampleInputEmail1">Phone</label>
-                                <input type="text" class="form-control" placeholder="@Model.PhoneNumber">
-                            </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text material-icons" id="basic-addon1">call</span>
+                                    </div>
+                                    <input type="text" class="form-control address-box-phone" placeholder="@Model.PhoneNumber"
+                                        value="@Model.PhoneNumber">
+                                </div>                            </div>
                         </div>
                         <a asp-controller="Home" asp-action="Index">Go back to Home</a>
                     </div>
                 </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5 class="mb-3">Additonal address</h5>
+                    </div>
+                    @{
+                        @* Add way to user add adrress *@
+                        foreach (var item in (UserServiceHelper as UserService).GetUserShipmentAddress(Model))
+                        {
+                        <div class="ibox-content address-box">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="exampleInputEmail1">First name</label>
+                                    <input type="text" class="form-control address-box-first-name" placeholder="First name"
+                                        value="@item.FirstName">
+                                </div>
+                                <div class="col">
+                                    <label for="exampleInputEmail1">Last name</label>
+                                    <input type="text" class="form-control address-box-last-name" placeholder="Last name" value="@item.LastName">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="exampleInputEmail1">Address</label>
+                                                   <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text material-icons" id="basic-addon1">home</span>
+                                    </div>
+                                    <input type="text" class="form-control address-box-address" placeholder="@item.StreetAddress"
+                                        value="@item.StreetAddress">
+                                </div>
+                                </div>
+                                <div class="col">
+                                <label for="exampleInputEmail1">Phone</label>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text material-icons" id="basic-addon1">call</span>
+                                    </div>
+                                    <input type="text" class="form-control address-box-phone" placeholder="@item.PhoneNumber"
+                                        value="@item.PhoneNumber">
+                                </div>
+
+                                </div>
+                            </div>
+                            <div class="m-t-sm">
+                                  <a data-id="@item.ID" asp-action="RemoveAddress" asp-controller="User" asp-route-id = "@item.ID"
+                                    asp-route-returnUrl = "@(Url.Action("Profile","User"))"
+                                    class="btn text-muted remove-btn"><i
+                                                            class="fa fa-trash"></i> Remove
+                                                                item</a>
+                            </div>
+                        </div>
+                        }
+                        @* Update Section *@
+                        @* <div>
+                            <button class="btn btn-primary">Update</button>
+                        </div> *@
+                        @*  *@
+                        <div class="ibox-content">
+                            <div class="container p-2" id="btn-save-address">
+                                <a>
+                                    <div class="bg-light d-flex justify-content-center">
+                                        <span class="material-icons fs-6">save</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="container p-2" id="btn-add-address">
+                                <a asp-action="AddAddress" asp-controller="User" asp-route-returnUrl=@(Url.Action("Profile","User"))>
+                                    <div class="bg-light d-flex justify-content-center">
+                                        <span class="material-icons md-48">add</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+
                 <div class="ibox">
                     <div class="ibox-title">
                         <h5>Order status</h5>
@@ -75,8 +159,6 @@
                         foreach (var item in (OrderServiceHelper as OrderService).GetOrders(Model))
                         {
                             var order_status_color =  TransactionStatusColorHelper.ColorByTransactionStatus(item.status);
-
-
                             <div class="ibox-content">
                                 <div class="table-responsive">
                                     <table class="table shoping-cart-table">
@@ -163,3 +245,123 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+
+<script>
+    @* window.addEventListener('load', initEventForUpdateButton); *@
+        $(document).ready(() => {
+            initEventForSaveAdressButton();
+        })
+
+    function initEventForSaveAdressButton() {
+        $("#btn-save-address").on("click", event => {
+            var data = []
+            var list_of_address_box = document.getElementsByClassName("address-box")
+            for(let i = 0; i < list_of_address_box.length; i++){
+                var temp_data = gatherAdrressBox(list_of_address_box[i])
+                data.push(temp_data)
+            }
+            UploadAddress(data)
+        })
+    }
+
+    function gatherAdrressBox(event){
+        var boxes = { frist_name :".address-box-first-name", last_name : ".address-box-last-name" , 
+        address: ".address-box-address",
+        phone : ".address-box-phone"}
+        var frist_name =  $(event).find(boxes.frist_name).val()
+        var last_name =$(event).find(boxes.last_name).val()
+        var phone =  $(event).find(boxes.phone).val()
+        var address =  $(event).find(boxes.address).val()
+        return {
+            LastName : last_name,
+            FirstName : frist_name,
+            PhoneNumber : phone,
+            StreetAddress:address
+        }
+
+    }
+
+    function UploadAddress(listOfAddress){
+            var request_url = "@Url.Action("UpdateAddress","User",new {
+                    returnUrl = @Url.Action("Profile","User")
+                })";
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: request_url,
+                data:JSON.stringify({
+                    "data" : listOfAddress
+                }),
+                datatype: "json",
+                success: function (result) {
+                    //do something
+                    window.location.href = "@Url.RouteUrl("Cart")";
+                },
+
+                error: function (xmlhttprequest, textstatus, errorthrown) {
+                    alert(" conection to the server failed ");
+                    console.log("error: " + errorthrown);
+                }
+            });
+    }
+
+
+    async function RemoveItem(productId) {
+        var record = productId
+        var dialogResult = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        })
+        if (dialogResult.isConfirmed) {
+            $.ajax({
+                type: "DELETE",
+                contentType: "application/json; charset=utf-8",
+                url: "cart/remove/" + record,
+                data: {},
+                datatype: "json",
+                success: function (result) {
+                    //do something
+                    window.location.href = "@Url.RouteUrl("Cart")";
+                },
+
+                error: function (xmlhttprequest, textstatus, errorthrown) {
+                    alert(" conection to the server failed ");
+                    console.log("error: " + errorthrown);
+                }
+            });
+        }
+
+
+    }
+
+    function UpdateItem(recordId, recordAmmount) {
+        @* var recordId = $(this).attr("data-id");
+                var recordAmmount = $(String().concat(recordId, "-quantity")) *@
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: "cart/update/" + recordId,
+                data: {
+                    "Amount": recordAmmount
+                },
+                datatype: "json",
+                success: function (result) {
+                    //do something
+                    window.location.href = "@Url.RouteUrl("Cart")";
+                },
+
+                error: function (xmlhttprequest, textstatus, errorthrown) {
+                    alert(" conection to the server failed ");
+                    console.log("error: " + errorthrown);
+                }
+            });
+    }
+</script>
+}

@@ -1,11 +1,15 @@
 @using ApplicationCore.Enum
 @using Web.Helper
+@using Web.Services
 @model ApplicationCore.Entities.Order;
+@using ApplicationCore.Interfaces;
+@inject IUserService UserServiceHelper;
+
 @{
     ViewData["Title"] = "Order";
     Layout = "~/Views/Shared/_CenterLayout.cshtml";
     var order_status_color = TransactionStatusColorHelper.ColorByTransactionStatus(Model.status);
-
+    var list_of_address = (UserServiceHelper as UserService).GetUserShipmentAddress(Model.AppUser);
 }
 
 <link rel="stylesheet" href="~/css/cart_ui.css">
@@ -16,7 +20,7 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <div class="d-flex flex-row justify-content-between">
-                            <div class="d-flex flex-row justify-content-between">
+                            <div class="d-flex flex-row justify-content-between w-75">
                                 <h5 class="mr-3">Order - #@Model.ID</h5>
                                 <h6 class="badge @order_status_color text-white">Status @Model.status</h6>
                             </div>
@@ -24,43 +28,70 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <h5 class="mb-3">User information</h5>
-                        <div class="form-row mb-3">
-                            <div class="col">
-                                <label for="exampleInputEmail1">First name</label>
-                                <input type="text" class="form-control" placeholder="First name"
-                                    value="@Model.AppUser.FirstName" disabled>
-                            </div>
-                            <div class="col">
-                                <label for="exampleInputEmail1">Last name</label>
-                                <input type="text" class="form-control" placeholder="Last name"
-                                    value="@Model.AppUser.LastName" disabled>
-                            </div>
+                        <h5 class="mb-3">Address information</h5>
+                        <div class="row p-3">
+                            <select id="btn-choice-address" class="form-select" aria-label="Default select example">
+                            @{
+                                <option >Select your location</option>
+
+                            foreach (var item in list_of_address)
+                            {
+                                <option value="@item.ID">@item.StreetAddress</option>
+                            }
+                            }  
+                            </select>
                         </div>
 
-                        <div class="form-row mb-3">
-                            <div class="col">
-                                <label for="exampleInputEmail1">Email</label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">#</span>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="@Model.AppUser.Email"
-                                        aria-describedby="basic-addon1" disabled>
+
+                    @{
+                        foreach (var item in list_of_address)
+                        {
+                        <div id="address-@item.ID" class="address-box" style="display: none;">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="exampleInputEmail1">First name</label>
+                                    <input type="text" class="form-control address-box-first-name" placeholder="First name"
+                                        value="@item.FirstName" disabled>
+                                </div>
+                                <div class="col">
+                                    <label for="exampleInputEmail1">Last name</label>
+                                    <input type="text" class="form-control address-box-last-name" placeholder="Last name" value="@item.LastName" disabled>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="exampleInputEmail1">Address</label>
+                                                   <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text material-icons" id="basic-addon1">home</span>
+                                    </div>
+                                    <input type="text" class="form-control address-box-phone" placeholder="@item.StreetAddress"
+                                        value="@item.StreetAddress" disabled>
+                                </div>
+                                </div>
+                                <div class="col">
                                 <label for="exampleInputEmail1">Phone</label>
-                                <input type="text" class="form-control" placeholder="@Model.AppUser.PhoneNumber"
-                                    disabled>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text material-icons" id="basic-addon1">call</span>
+                                    </div>
+                                    <input type="text" class="form-control address-box-phone" placeholder="@item.PhoneNumber"
+                                        value="@item.PhoneNumber" disabled>
+                                </div>
+
+                                </div>
                             </div>
                         </div>
-
-                        <h6>Shipping Address</h6>
-                        <div class="form-group">
-                            <input type="email" class="form-control" id="exampleFormControlInput1"
-                                disabled="@(((int)Model.status) == ((int)@TransactionStatus.WaitForComformation)?null:"disabled")"
-                                placeholder=".... ..... .....">
+                    }}
+                    <div id="edit-box" style="display: none;">
+                            <div class="container p-2" id="btn-add-address">
+                                <a asp-action="Profile" asp-controller="User">
+                                    <div class="bg-light d-flex justify-content-center">
+                                        <span class="material-icons md-48">edit</span>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -130,6 +161,7 @@
                         @if (Model.status == TransactionStatus.WaitForComformation)
                         {
                             <a asp-action="UpdateStatus" asp-controller="Order"
+                            asp-route-id="@Model.ID"
                             asp-route-status="@((int)TransactionStatus.Comformed)" class="btn btn-primary pull-right"><i
                                 class="fa fa fa-shopping-cart btn"></i>
                                 Comform</a>
@@ -176,3 +208,54 @@
         </div>
     </div>
 </div>
+
+
+
+@section Scripts{
+
+<script>
+    @* window.addEventListener('load', initEventForUpdateButton); *@
+        $(document).ready(() => {
+            initEventForSaveAdressButton();
+        })
+
+    function initEventForSaveAdressButton() {
+        $("#btn-choice-address").on("change", event => {
+            var order_index = $("#btn-choice-address").find(":selected").val();
+            if (order_index){
+                $(".address-box").css("display", "none");
+                $(".edit-box").css("display", "none");
+                $("#edit-box").css("display", "block");
+                $("#address-"+order_index).css("display", "block");
+            }
+
+
+        })
+    }
+
+                @* var data = []
+            var list_of_address_box = document.getElementsByClassName("address-box")
+            for(let i = 0; i < list_of_address_box.length; i++){
+                var temp_data = gatherAdrressBox(list_of_address_box[i])
+                data.push(temp_data)
+            }
+            UploadAddress(data) *@
+
+    function gatherAdrressBox(event){
+        var boxes = { frist_name :".address-box-first-name", last_name : ".address-box-last-name" , 
+        address: ".address-box-address",
+        phone : ".address-box-phone"}
+        var frist_name =  $(event).find(boxes.frist_name).val()
+        var last_name =$(event).find(boxes.last_name).val()
+        var phone =  $(event).find(boxes.phone).val()
+        var address =  $(event).find(boxes.address).val()
+        return {
+            LastName : last_name,
+            FirstName : frist_name,
+            PhoneNumber : phone,
+            StreetAddress:address
+        }
+
+    }
+</script>
+}
