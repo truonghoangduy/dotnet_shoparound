@@ -19,6 +19,8 @@ namespace Infrastructure.Data
         public DbSet<Cart> Carts { set; get; }
         public DbSet<CartDetail> CartDetails { set; get; }
 
+        public DbSet<ShipmentDetail> ShipmentDetails { set; get; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

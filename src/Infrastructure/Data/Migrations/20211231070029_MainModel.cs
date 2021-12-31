@@ -15,6 +15,7 @@ namespace Infrastructure.Data.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
+                    MainAddressId = table.Column<int>(type: "integer", nullable: false),
                     UserName = table.Column<string>(type: "text", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
@@ -78,21 +79,22 @@ namespace Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "ShipmentDetails",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     AppUserID = table.Column<string>(type: "text", nullable: true),
-                    status = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    StreetAddress = table.Column<string>(type: "text", nullable: true),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
+                    LastName = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.ID);
+                    table.PrimaryKey("PK_ShipmentDetails", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Orders_AppUser_AppUserID",
+                        name: "FK_ShipmentDetails_AppUser_AppUserID",
                         column: x => x.AppUserID,
                         principalTable: "AppUser",
                         principalColumn: "Id",
@@ -123,6 +125,36 @@ namespace Infrastructure.Data.Migrations
                         principalTable: "Catergories",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AppUserID = table.Column<string>(type: "text", nullable: true),
+                    ShipmentDetailId = table.Column<string>(type: "text", nullable: true),
+                    ShipmentDetailID = table.Column<int>(type: "integer", nullable: true),
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Orders_AppUser_AppUserID",
+                        column: x => x.AppUserID,
+                        principalTable: "AppUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_ShipmentDetails_ShipmentDetailID",
+                        column: x => x.ShipmentDetailID,
+                        principalTable: "ShipmentDetails",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,9 +247,19 @@ namespace Infrastructure.Data.Migrations
                 column: "AppUserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_ShipmentDetailID",
+                table: "Orders",
+                column: "ShipmentDetailID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_CatergoryID",
                 table: "Products",
                 column: "CatergoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShipmentDetails_AppUserID",
+                table: "ShipmentDetails",
+                column: "AppUserID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -238,10 +280,13 @@ namespace Infrastructure.Data.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "AppUser");
+                name: "ShipmentDetails");
 
             migrationBuilder.DropTable(
                 name: "Catergories");
+
+            migrationBuilder.DropTable(
+                name: "AppUser");
         }
     }
 }

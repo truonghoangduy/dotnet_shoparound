@@ -14,8 +14,9 @@ namespace ApplicationCore.Entities
     {
         public string FirstName { set; get; }
         public string LastName { set; get; }
+        public int MainAddressId { set; get; }
 
-        public List<Order> orders { set; get; }
-
+        public List<Order> Orders { set; get; }
+        public List<ShipmentDetail> ShipmentDetails { set; get; }
     }
 }

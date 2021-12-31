@@ -29,6 +29,7 @@ namespace Infrastructure.Identity.Data.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
+                    MainAddressId = table.Column<int>(type: "integer", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -177,21 +178,22 @@ namespace Infrastructure.Identity.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "ShipmentDetail",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     AppUserID = table.Column<string>(type: "text", nullable: true),
-                    status = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    StreetAddress = table.Column<string>(type: "text", nullable: true),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
+                    LastName = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Order", x => x.ID);
+                    table.PrimaryKey("PK_ShipmentDetail", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Order_AspNetUsers_AppUserID",
+                        name: "FK_ShipmentDetail_AspNetUsers_AppUserID",
                         column: x => x.AppUserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -222,6 +224,36 @@ namespace Infrastructure.Identity.Data.Migrations
                         principalTable: "Catergory",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AppUserID = table.Column<string>(type: "text", nullable: true),
+                    ShipmentDetailId = table.Column<string>(type: "text", nullable: true),
+                    ShipmentDetailID = table.Column<int>(type: "integer", nullable: true),
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Order_AspNetUsers_AppUserID",
+                        column: x => x.AppUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Order_ShipmentDetail_ShipmentDetailID",
+                        column: x => x.ShipmentDetailID,
+                        principalTable: "ShipmentDetail",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,6 +331,11 @@ namespace Infrastructure.Identity.Data.Migrations
                 column: "AppUserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Order_ShipmentDetailID",
+                table: "Order",
+                column: "ShipmentDetailID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderDetail_OrderId",
                 table: "OrderDetail",
                 column: "OrderId");
@@ -312,6 +349,11 @@ namespace Infrastructure.Identity.Data.Migrations
                 name: "IX_Product_CatergoryID",
                 table: "Product",
                 column: "CatergoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShipmentDetail_AppUserID",
+                table: "ShipmentDetail",
+                column: "AppUserID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -344,10 +386,13 @@ namespace Infrastructure.Identity.Data.Migrations
                 name: "Product");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "ShipmentDetail");
 
             migrationBuilder.DropTable(
                 name: "Catergory");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

@@ -50,6 +50,9 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("MainAddressId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -125,6 +128,12 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<int?>("ShipmentDetailID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ShipmentDetailId")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -134,6 +143,8 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("AppUserID");
+
+                    b.HasIndex("ShipmentDetailID");
 
                     b.ToTable("Order");
                 });
@@ -199,6 +210,35 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.HasIndex("CatergoryID");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.ShipmentDetail", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AppUserID")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("StreetAddress")
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AppUserID");
+
+                    b.ToTable("ShipmentDetail");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -347,10 +387,16 @@ namespace Infrastructure.Identity.Data.Migrations
             modelBuilder.Entity("ApplicationCore.Entities.Order", b =>
                 {
                     b.HasOne("ApplicationCore.Entities.AppUser", "AppUser")
-                        .WithMany("orders")
+                        .WithMany("Orders")
                         .HasForeignKey("AppUserID");
 
+                    b.HasOne("ApplicationCore.Entities.ShipmentDetail", "ShipmentDetail")
+                        .WithMany()
+                        .HasForeignKey("ShipmentDetailID");
+
                     b.Navigation("AppUser");
+
+                    b.Navigation("ShipmentDetail");
                 });
 
             modelBuilder.Entity("ApplicationCore.Entities.OrderDetail", b =>
@@ -381,6 +427,15 @@ namespace Infrastructure.Identity.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Catergory");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Entities.ShipmentDetail", b =>
+                {
+                    b.HasOne("ApplicationCore.Entities.AppUser", "AppUser")
+                        .WithMany("ShipmentDetails")
+                        .HasForeignKey("AppUserID");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -436,7 +491,9 @@ namespace Infrastructure.Identity.Data.Migrations
 
             modelBuilder.Entity("ApplicationCore.Entities.AppUser", b =>
                 {
-                    b.Navigation("orders");
+                    b.Navigation("Orders");
+
+                    b.Navigation("ShipmentDetails");
                 });
 
             modelBuilder.Entity("ApplicationCore.Entities.Order", b =>
