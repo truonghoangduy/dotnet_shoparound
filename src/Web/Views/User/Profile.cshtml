@@ -36,7 +36,13 @@
             <div class="col-md-9">
                 <div class="ibox">
                     <div class="ibox-content">
-                        <h5 class="mb-3">User information</h5>
+                        <div class="d-flex flex-row justify-content-between">
+                            <h5 class="mb-3">User information</h5>
+                                <form class="form-inline" asp-controller="User" asp-action="Logout"
+                                asp-route-returnUrl="@Url.Action("Index","Home")" method="post">
+                                <button type="submit" class="nav-link btn btn-link">Click here to Logout</button>
+                                </form>
+                        </div>
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="exampleInputEmail1">First name</label>
@@ -254,6 +260,14 @@
             initEventForSaveAdressButton();
         })
 
+    async function successDialog(mess){
+       await Swal.fire(
+        'Success :>',
+        mess,
+        'success'
+        );
+    }
+
     function initEventForSaveAdressButton() {
         $("#btn-save-address").on("click", event => {
             var data = []
@@ -296,8 +310,9 @@
                 }),
                 datatype: "json",
                 success: function (result) {
+                    successDialog(`Address are updated`)
                     //do something
-                    window.location.href = "@Url.RouteUrl("Cart")";
+                    @* window.location.href = "@Url.RouteUrl("Cart")"; *@
                 },
 
                 error: function (xmlhttprequest, textstatus, errorthrown) {

@@ -20,7 +20,7 @@ namespace ApplicationCore.Entities
         public AppUser AppUser { set; get; }
         public List<OrderDetail> OrderDetails { set; get; }
 
-        public String ShipmentDetailId { set; get; }
+        public int ShipmentDetailId { set; get; }
         public ShipmentDetail ShipmentDetail { set; get; }
         public TransactionStatus status { set; get; }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using ApplicationCore.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ namespace Web.Controllers
         }
 
 
+
+
         public IActionResult ProductByCategory(int catergoryId)
         {
             // Filter by cateroryID
@@ -36,7 +39,8 @@ namespace Web.Controllers
 
             // UI Things
             ViewBag.CurrentCatergoryID = catergoryId;
-
+            var Catergories = _context.Catergories.ToList().Where((cat) => cat.ParrentId == null).ToList();
+            ViewBag.Catergories = Catergories;
             //TODO change to using ViewModel [including variable using by this scope]
             return View(ProductsByCat);
         }

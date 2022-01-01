@@ -4,31 +4,51 @@
     Layout = "~/Views/Shared/_CenterLayout.cshtml";
 }
 
-
-<div class="m-3 row d-flex justify-content-center align-items-center">
-    <div class="col-md-4">
-        <form asp-controller="User" asp-action="Register" method="post">
-            @* <form asp-route-returnUrl="@Model.ReturnUrl" method="post"> *@
-            <h4>Create a new account.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email">Email</label>
-                <input asp-for="Email" class="form-control" name="Email" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password">Password</label>
-                <input asp-for="Password" class="form-control" name="Password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword">ConfirmPassword</label>
-                <input asp-for="ConfirmPassword" class="form-control" name="ConfirmPassword" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
+<div id="content">
+    <div class="m-3 row d-flex justify-content-center align-items-center">
+        <div class="col-md-4">
+            <form asp-controller="User" asp-action="Register" method="post">
+                @* <form asp-route-returnUrl="@Model.ReturnUrl" method="post"> *@
+                <h4>Create a new account.</h4>
+                <hr />
+                @* <div asp-validation-summary="All" class="text-danger"></div> *@
+                <div class="form-group row mb-3">
+                    <div class="col">
+                        <label asp-for="FirstName">FirstName</label>
+                        <input asp-for="FirstName" class="form-control" name="FirstName" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="LastName">LastName</label>
+                        <input asp-for="LastName" class="form-control" name="LastName" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text material-icons" id="basic-addon1">call</span>
+                    </div>
+                    <input type="text" class="form-control address-box-phone" name="PhoneNumber" asp-for="PhoneNumber">
+                </div>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                <div class=" form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" name="Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password">Password</label>
+                    <input asp-for="Password" class="form-control" name="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ConfirmPassword">ConfirmPassword</label>
+                    <input asp-for="ConfirmPassword" class="form-control" name="ConfirmPassword" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
     </div>
 </div>
 

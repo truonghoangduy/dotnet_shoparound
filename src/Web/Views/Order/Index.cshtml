@@ -33,13 +33,16 @@
                             <select id="btn-choice-address" class="form-select" aria-label="Default select example">
                             @{
                                 <option >Select your location</option>
-
                             foreach (var item in list_of_address)
                             {
                                 <option value="@item.ID">@item.StreetAddress</option>
                             }
                             }  
                             </select>
+                            @if (list_of_address.Count == 0)
+                            {
+                                
+                            }
                         </div>
 
 
@@ -84,7 +87,7 @@
                             </div>
                         </div>
                     }}
-                    <div id="edit-box" style="display: none;">
+                    <div id="edit-box">
                             <div class="container p-2" id="btn-add-address">
                                 <a asp-action="Profile" asp-controller="User">
                                     <div class="bg-light d-flex justify-content-center">
@@ -113,7 +116,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td width="90">
-                                                        <img src="~@Url.Content(item.Product.ImageURL)"
+                                                        <img src="~/@item.Product.ImageURL"
                                                     class="cart-product-imitation">
                                                     </td>
                                                     <td class="desc">

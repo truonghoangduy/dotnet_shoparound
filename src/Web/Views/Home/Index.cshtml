@@ -4,7 +4,7 @@
 }
 @using ApplicationCore.Entities;
 @using Web.Helper
-
+@model List<Product>;
 <!-- Content -->
 <div id="content">
     <!-- Content Slider -->
@@ -23,46 +23,56 @@
         </div>
     </div>
     <!-- End Content Slider -->
-
-    @* // ProductView *@
-    @{
-        // TODO VIEW BY 3, 10, 20 Product Per Page
-        List<List<Product>> chunkedProducts = (ViewBag.Products as List<Product>).ChunkBy(3);
-    }
-    @for (int i = 0; i < chunkedProducts.Count; i++)
+    @if (Model != null)
     {
-        @* var isNewRow = (i % 2 == 0);
-            var newRowStyle = isNewRow ? "margin-bottom:9px" : ""; *@
-        <div class="products" style="margin-bottom:9px">
-            <div class="cl">&nbsp;</div>
-            <ul>
-                @foreach (var item in chunkedProducts[i].Select((value, i) => (value, i)))
-                {
-                    var colIndex = (item.i + 1);
-                    bool isLast = (colIndex % 3 == 0);
-                    var lastProductStyle = isLast ? "last" : "";
+        @* // ProductView *@
+        // TODO VIEW BY 3, 10, 20 Product Per Page
+        List<List<Product>> chunkedProducts = Model.ChunkBy(3);
+        for (int i = 0; i < chunkedProducts.Count; i++)
+        {
+            @* var isNewRow = (i % 2 == 0);
+                var newRowStyle = isNewRow ? "margin-bottom:9px" : ""; *@
+            <div class="products" style="margin-bottom:9px">
+                <div class="cl">&nbsp;</div>
+                <ul>
+                    @foreach (var item in chunkedProducts[i].Select((value, i) => (value, i)))
+                    {
+                        var colIndex = (item.i + 1);
+                        bool isLast = (colIndex % 3 == 0);
+                        var lastProductStyle = isLast ? "last" : "";
 
-                    <li class="@lastProductStyle">
-                        <a href="@Url.Action("Index","Product",new {ID = @item.value.ID})">
-                            <img src="@item.value.ImageURL" alt="" />
-                        </a>
-                        <div class="product-info">
-                            <h3>@item.value.Name</h3>
-                            <div class="product-desc">
-                                <h4>@item.value.Catergory.Name</h4>
-                                <p>
-                                    @item.value.Description.Substring(0,20)
-                                </p>
-                                <strong class="price">$@item.value.Price</strong>
+                        <li class="@lastProductStyle">
+                            <a href="@Url.Action("Index","Product",new {ID = @item.value.ID})">
+                                <img src="~/@item.value.ImageURL" alt="" />
+                            </a>
+                            <div class="product-info">
+                                <h3>@item.value.Name</h3>
+                                <div class="product-desc">
+                                    <h4>@item.value.Catergory.Name</h4>
+                                    <p>
+                                        @item.value.Description.Substring(0,20)
+                                    </p>
+                                    <strong class="price">$@item.value.Price</strong>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
 
 
-                }
-            </ul>
-            <div class="cl">&nbsp;</div>
-        </div>
+                    }
+                </ul>
+                <div class="cl">&nbsp;</div>
+            </div>
+        }
+    }
+    else
+    {
+        <div>Sorry not found product</div>
+        <span>Sreach</span>
+        foreach (var item in Context.Request.Query)
+        {
+            <span>@item.Key : @item.Value</span>
+            <span>,</span>
+        }
     }
 </div>
 <!-- End Content -->

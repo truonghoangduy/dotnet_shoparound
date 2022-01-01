@@ -82,7 +82,14 @@ namespace Web.Services
         }
         public async Task<IdentityResult> RegisterAsync(RegisterViewModel usr)
         {
-            var user = new AppUser { UserName = usr.Email, Email = usr.Email };
+            var user = new AppUser
+            {
+                UserName = usr.Email,
+                Email = usr.Email,
+                PhoneNumber = usr.PhoneNumber,
+                FirstName = usr.FirstName,
+                LastName = usr.LastName
+            };
             var result = await _userManager.CreateAsync(user, usr.Password);
             return result;
             // throw new System.NotImplementedException();
