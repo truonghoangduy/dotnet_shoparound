@@ -18,7 +18,7 @@ namespace ApplicationCore.Entities
 
         public ShipmentDetail FormAppUser(AppUser user)
         {
-            this.AppUser = user;
+            // this.AppUser = user;
             this.AppUserID = user.Id;
             this.FirstName = "";
             this.PhoneNumber = "";

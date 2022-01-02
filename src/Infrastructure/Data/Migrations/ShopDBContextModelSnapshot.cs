@@ -164,10 +164,19 @@ namespace Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("ShipmentDetailID")
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ShipmentAddressID")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ShipmentDetailId")
+                    b.Property<string>("StreetAddress")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -179,8 +188,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("AppUserID");
-
-                    b.HasIndex("ShipmentDetailID");
 
                     b.ToTable("Orders");
                 });
@@ -318,13 +325,7 @@ namespace Infrastructure.Data.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("AppUserID");
 
-                    b.HasOne("ApplicationCore.Entities.ShipmentDetail", "ShipmentDetail")
-                        .WithMany()
-                        .HasForeignKey("ShipmentDetailID");
-
                     b.Navigation("AppUser");
-
-                    b.Navigation("ShipmentDetail");
                 });
 
             modelBuilder.Entity("ApplicationCore.Entities.OrderDetail", b =>

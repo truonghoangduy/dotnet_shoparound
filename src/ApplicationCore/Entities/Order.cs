@@ -20,10 +20,38 @@ namespace ApplicationCore.Entities
         public AppUser AppUser { set; get; }
         public List<OrderDetail> OrderDetails { set; get; }
 
-        public int ShipmentDetailId { set; get; }
-        public ShipmentDetail ShipmentDetail { set; get; }
+        public string LastName { set; get; }
+        public string FirstName { set; get; }
+        public string PhoneNumber { set; get; }
+
+        public int ShipmentAddressID { set; get; }
+
+        public string StreetAddress { set; get; }
+        // public int ShipmentDetailID { set; get; }
+        // public ShipmentDetail ShipmentDetail { set; get; }
         public TransactionStatus status { set; get; }
 
+        public void AddShipmentDetail(ShipmentDetail detail)
+        {
+            LastName = detail.LastName;
+            PhoneNumber = detail.PhoneNumber;
+            StreetAddress = detail.StreetAddress;
+            FirstName = detail.FirstName;
+            ShipmentAddressID = detail.ID;
+        }
+
+        public bool isShippingDetailEmpty
+        {
+            get
+            {
+                if (LastName != null || LastName != null || StreetAddress != null || PhoneNumber != null)
+                {
+                    return false;
+                }
+                return true;
+            }
+
+        }
 
         public bool isEmpty
         {
