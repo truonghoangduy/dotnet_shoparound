@@ -125,6 +125,7 @@ namespace Web.Services
             var cart = new ApplicationCore.Entities.Cart()
             {
                 AppUser = user,
+                AppUserID = user.Id,
                 CartDetails = new List<CartDetail>(),
             };
             var result = await _context.Carts.AddAsync(cart);

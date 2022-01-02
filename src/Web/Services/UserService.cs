@@ -58,7 +58,7 @@ namespace Web.Services
 
         public async Task AddAddress(ShipmentDetail address)
         {
-            _context.ShipmentDetails.Update(address);
+            _context.ShipmentDetails.Add(address);
             _context.SaveChanges();
         }
 
@@ -99,8 +99,10 @@ namespace Web.Services
         {
             // DUMP
             var oldShipmentDetails = _context.ShipmentDetails.Where(detail => detail.AppUserID == user.Id).ToList();
+
+
             _context.ShipmentDetails.RemoveRange(oldShipmentDetails);
-            _context.ShipmentDetails.UpdateRange(list_shipmentDetail);
+            _context.ShipmentDetails.AddRange(list_shipmentDetail);
             _context.SaveChanges();
         }
 

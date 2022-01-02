@@ -69,6 +69,21 @@ namespace Web.Controllers
             });
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("checkout/{id}/address")]
+        public async Task<IActionResult> UpdateAddress(int id, int addressId)
+        {
+            var currentUser = await this._userServive.GetByContext(HttpContext.User);
+            var order = _orderService.Info(currentUser, id);
+            var shippingDetail = await _userServive.GetAddressById(currentUser, addressId);
+            _orderService.UpdateOrderAddress(currentUser, order, shippingDetail);
+            return RedirectToAction("Index", new
+            {
+                id = order.ID
+            });
+        }
+
 
 
 

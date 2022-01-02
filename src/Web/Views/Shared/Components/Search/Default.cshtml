@@ -19,7 +19,8 @@
     <label>Category</label>
     <select class="field" name="catergoryId">
         <option value="">-- Select Category --</option>
-        @if (Context.Request.Query["catergoryId"] != StringValues.Empty)
+        @if ((string)Context.Request.Query["catergoryId"] != "" && Context.Request.Query["catergoryId"] !=
+        StringValues.Empty)
         {
             @* <div>GHellpo</div> *@
             var catergoryId = Context.Request.Query["catergoryId"];

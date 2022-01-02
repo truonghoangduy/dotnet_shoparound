@@ -1,4 +1,5 @@
 ﻿@using ApplicationCore.Entities;
+@using Microsoft.Extensions.Primitives
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -65,46 +66,7 @@
                 <div class="box search">
                     <h2>Search by <span></span></h2>
                     <div class="box-content">
-                        <form asp-action="Query" asp-controller="Home" method="get">
-                            <label>Keyword</label>
-                            @if (Context.Request.Query.Where(x => x.Key == "keyword") != null)
-                                {
-                                    var keyword = Context.Request.Query["keyword"];
-                                <input type="text" class="field" name="keyword" value="@keyword"/>
-                                }else{
-                                <input type="text" class="field" name="keyword"/>
-
-                                }
-                            <label>Category</label>
-                            <select class="field" name="catergoryId">
-                                <option value="">-- Select Category --</option>
-                                @if (Context.Request.Query.Where(x => x.Key == "catergoryId") != null)
-                                {
-                                    var catergoryId = Context.Request.Query["catergoryId"];
-                                    var catergory = (ViewBag.Catergories as List<Catergory>).FirstOrDefault(x=>x.ID.ToString() == catergoryId);
-                                    <option selected value="@catergory.ID">@catergory.Name</option>
-                                }
-                                @foreach (var item in ViewBag.Catergories as List<Catergory>)
-                                    {
-                                    <option value=@item.ID>@item.Name</option>
-                                }
-                            </select>
-                            <div class="inline-field">
-                                <label>Price</label>
-                                <select class="field small-field">
-                                    <option value="">$10</option>
-                                </select>
-                                <label>to:</label>
-                                <select class="field small-field">
-                                    <option value="">$50</option>
-                                </select>
-                            </div>
-                            <input type="submit" class="search-submit" value="Search" />
-                            <p>
-                                <a href="#" class="bul">Advanced search</a><br />
-                                <a href="#" class="bul">Contact Customer Support</a>
-                            </p>
-                        </form>
+                        @await Component.InvokeAsync("Search")
                     </div>
                 </div>
                 <!-- End Search -->

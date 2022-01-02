@@ -51,12 +51,12 @@ namespace Web.Services
             // Create new Order corresponding to Cart
             order = new Order()
             {
-                AppUser = cart.AppUser,
-                AppUserID = cart.AppUserID,
+                // AppUser = user,
+                AppUserID = user.Id,
             };
             order.status = TransactionStatus.WaitForComformation;
             order.OrderDetails = new List<OrderDetail>();
-            _context.Orders.Update(order);
+            _context.Orders.Add(order);
             _context.SaveChanges();
             order.OrderDetails = cart.CartDetails.Select(detail => new OrderDetail()
             {
@@ -102,10 +102,10 @@ namespace Web.Services
             return order;
         }
 
-        public void UpdateOrderAddress(AppUser currentUser, Order usr_order, ShipmentDetail shipmentDetail)
+        public void UpdateOrderAddress(AppUser currentUser, Order usr_order, ShipmentDetail address)
         {
             var update_address_cursor = _context.Orders.FirstOrDefault(order => order.ID == usr_order.ID && order.AppUserID == currentUser.Id);
-            update_address_cursor.ShipmentDetailId = shipmentDetail.ID;
+            update_address_cursor.AddShipmentDetail(address);
             _context.Orders.Update(update_address_cursor);
             _context.SaveChanges();
         }
